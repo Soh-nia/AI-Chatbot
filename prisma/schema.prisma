@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String        @id @default(uuid())
+  email      String        @unique
+  tone       String        @default("casual")
+  theme      String        @default("light")
+  badges     Json          @default("[]")
+  streak     Int           @default(0)
+  lastActive DateTime?
+  messages   ChatMessage[]
+  usage      UserUsage[]
+  analytics  Analytics[]
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  sessionId String
+  role      String
+  content   String
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model UserUsage {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  queryCount Int      @default(0)
+  imageCount Int      @default(0)
+  timestamp  DateTime
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, timestamp])
+}
+
+model Analytics {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  sessionId  String
+  queryCount Int
+  duration   Int
+  topic      String?
+  timestamp  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Leaderboard {
+  id         Int    @id @default(autoincrement())
+  userId     String @unique
+  queryCount Int
+}
