@@ -15,16 +15,63 @@ datasource db {
 }
 
 model User {
-  id         String        @id @default(uuid())
-  email      String        @unique
-  tone       String        @default("casual")
-  theme      String        @default("light")
-  badges     Json          @default("[]")
-  streak     Int           @default(0)
-  lastActive DateTime?
-  messages   ChatMessage[]
-  usage      UserUsage[]
-  analytics  Analytics[]
+  id            String        @id @default(uuid())
+  email         String        @unique
+  emailVerified DateTime?
+  password      String?
+  name          String?
+  image         String?
+  tone          String        @default("casual")
+  theme         String        @default("light")
+  badges        Json          @default("[]")
+  streak        Int           @default(0)
+  lastActive    DateTime?
+  messages      ChatMessage[]
+  usage         UserUsage[]
+  analytics     Analytics[]
+  accounts      Account[]
+  sessions      Session[]
+  leaderboard   Leaderboard?
+
+  @@index([lastActive])
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  id         String   @id @default(uuid())
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@index([identifier])
 }
 
 model ChatMessage {
@@ -34,7 +81,10 @@ model ChatMessage {
   role      String
   content   String
   timestamp DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([userId, timestamp])
 }
 
 model UserUsage {
@@ -43,7 +93,7 @@ model UserUsage {
   queryCount Int      @default(0)
   imageCount Int      @default(0)
   timestamp  DateTime
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, timestamp])
 }
@@ -56,11 +106,17 @@ model Analytics {
   duration   Int
   topic      String?
   timestamp  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([userId, timestamp])
 }
 
 model Leaderboard {
   id         Int    @id @default(autoincrement())
   userId     String @unique
   queryCount Int
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([queryCount])
 }
