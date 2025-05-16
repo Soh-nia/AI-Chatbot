@@ -13,18 +13,17 @@ interface Particle {
   color: string;
 }
 
-// 3D Background Animation with enhanced effects
 const BackgroundAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return; // Null check for canvas
+    if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return; // Null check for context
+    if (!ctx) return;
 
-    const particles: Particle[] = []; // Explicitly typed array
+    const particles: Particle[] = [];
 
     // Set canvas dimensions
     const handleResize = () => {

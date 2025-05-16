@@ -68,7 +68,7 @@ export default function AIChatbotHomepage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative z-10 pt-20 pb-16 md:pt-32 md:pb-24">
+      <section className="relative z-10 pt-16 pb-16 md:pt-24 md:pb-24">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -133,7 +133,7 @@ export default function AIChatbotHomepage() {
               <div className="text-center">
                 <p className="text-sky-400 font-medium mb-2">Ready to try it?</p>
                 <Link href="/chat" className="inline-flex items-center px-4 py-2 rounded-lg bg-white text-slate-900 font-medium hover:bg-sky-100 transition-colors">
-                  Get Started Now <ChevronRight size={16} className="ml-1" />
+                  Try Nova Now <ChevronRight size={16} className="ml-1" />
                 </Link>
               </div>
             </div>
@@ -184,7 +184,7 @@ export default function AIChatbotHomepage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Link href="/chat" className="px-8 py-4 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-medium flex items-center justify-center text-lg">
-                Get Started for Free
+                Try Nova for Free
               </Link>
               <Link href="/" className="px-8 py-4 rounded-xl bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-white font-medium flex items-center justify-center text-lg hover:bg-slate-800 transition-colors">
                 View Documentation

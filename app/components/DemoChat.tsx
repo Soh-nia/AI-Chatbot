@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { ArrowRight, MessageSquare } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 // Define props interface for DemoChatMessage
 interface DemoChatMessageProps {
@@ -56,7 +56,7 @@ const DemoChat = () => {
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700/50">
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 flex items-center justify-center mr-3">
-              <MessageSquare size={16} className="text-white" />
+              <Sparkles size={16} className="text-white" />
             </div>
             <div className="font-medium">NOVA AI Assistant</div>
           </div>
