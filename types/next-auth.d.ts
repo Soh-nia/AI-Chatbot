@@ -23,3 +23,11 @@ declare module "next-auth/jwt" {
         picture?: string | null
     }
 }
+
+declare module "next/server" {
+    interface ResponseInit {
+        next?: {
+            tags?: string[];
+        };
+    }
+}

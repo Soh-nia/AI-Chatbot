@@ -15,6 +15,8 @@ import { Header } from "@/app/components/Header"
 import { SimpleFooter } from "@/app/components/Footer"
 import { useRouter, useSearchParams } from "next/navigation"
 
+export const dynamic = "force-dynamic";
+
 export default function SignUp() {
   const router = useRouter()
   const searchParams = useSearchParams()

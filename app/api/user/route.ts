@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
+    console.log(req.body);
     try {
         // For now, we'll use the guest user
         const guestUserId = 'guest';

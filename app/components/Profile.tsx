@@ -1,16 +1,15 @@
-import { getServerSession } from "next-auth"
+import { auth } from '@/auth';
 import { redirect } from "next/navigation"
-import { authOptions } from "@/app/api/auth/[...nextauth]/oldroute"
 import { PrismaClient } from "@prisma/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+// import { Badge } from "@/components/ui/badge"
 import AuthStatus from "@/components/auth-status"
-import { Award, Calendar, MessageSquare } from "lucide-react"
+import { Calendar, MessageSquare } from "lucide-react"
 
 const prisma = new PrismaClient()
 
 export default async function ProfilePage() {
-  const session = await getServerSession(authOptions)
+  const session = await auth();
 
   if (!session || !session.user) {
     redirect("/auth/signin")
@@ -31,7 +30,7 @@ export default async function ProfilePage() {
     redirect("/auth/signin")
   }
 
-  const badges = JSON.parse(user.badges.toString())
+  // const badges = JSON.parse(user.badges.toString())
   const messageCount = user.messages.length
 
   return (
@@ -75,7 +74,7 @@ export default async function ProfilePage() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Badges Earned</CardTitle>
                 <Award className="h-4 w-4 text-muted-foreground" />
@@ -86,10 +85,10 @@ export default async function ProfilePage() {
                   {badges.length > 0 ? "Great achievements!" : "Earn badges by using the chatbot"}
                 </p>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
-          <Card className="mb-8">
+          {/* <Card className="mb-8">
             <CardHeader>
               <CardTitle>Your Badges</CardTitle>
               <CardDescription>Achievements you&apos;ve earned through your interactions</CardDescription>
@@ -110,7 +109,7 @@ export default async function ProfilePage() {
                 </p>
               )}
             </CardContent>
-          </Card>
+          </Card> */}
 
           <Card>
             <CardHeader>

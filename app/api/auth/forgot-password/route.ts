@@ -31,9 +31,9 @@ export async function POST(req: Request) {
 
             // In production, send an email with the reset link
             // For now, log it for testing
-            const resetLink = `http://localhost:3000/auth/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
-            console.log(`Password reset requested for ${email}`)
-            console.log(`Reset link: ${resetLink}`)
+            // const resetLink = `http://localhost:3000/auth/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
+            // console.log(`Password reset requested for ${email}`)
+            // console.log(`Reset link: ${resetLink}`)
         }
 
         return NextResponse.json({ success: true })

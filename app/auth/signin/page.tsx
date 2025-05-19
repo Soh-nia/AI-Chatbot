@@ -18,6 +18,8 @@ import { useRouter, useSearchParams } from "next/navigation"
 
 const lusitana = Lusitana({ subsets: ["latin"], weight: ["400", "700"] })
 
+export const dynamic = "force-dynamic";
+
 export default function SignIn() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -207,11 +209,11 @@ export default function SignIn() {
               <CardFooter className="flex flex-col space-y-4">
                 <div className="text-sm text-center text-slate-300">
                   By signing in, you agree to our{" "}
-                  <Link href="/terms" className="text-sky-400 hover:underline">
+                  <Link href="/" className="text-sky-400 hover:underline">
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-sky-400 hover:underline">
+                  <Link href="/" className="text-sky-400 hover:underline">
                     Privacy Policy
                   </Link>
                 </div>

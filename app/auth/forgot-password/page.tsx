@@ -13,6 +13,8 @@ import BackgroundAnimation from "@/app/components/BackgroundAnimation"
 import { Header } from "@/app/components/Header"
 import { SimpleFooter } from "@/app/components/Footer"
 
+export const dynamic = "force-dynamic";
+
 export default function ForgotPassword() {
   const [email, setEmail] = useState("")
   const [isEmailSent, setIsEmailSent] = useState(false)

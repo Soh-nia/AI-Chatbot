@@ -14,6 +14,7 @@ const BADGE_THRESHOLDS = [
 ];
 
 export async function POST(req: NextRequest) {
+    console.log(req.body);
     try {
         // For now, we'll use the guest user
         const guestUserId = 'guest';
