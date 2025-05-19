@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LogOut, Settings, User } from "lucide-react"
+import { LogOut, MessageSquare } from "lucide-react"
 import Link from "next/link"
 
 export default function AuthStatus() {
@@ -61,17 +61,17 @@ export default function AuthStatus() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/profile" className="cursor-pointer flex w-full">
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+          <Link href="/chat" className="cursor-pointer flex w-full">
+            <MessageSquare className="mr-2 h-4 w-4" />
+            <span>Chat</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link href="/settings" className="cursor-pointer flex w-full">
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer" onClick={() => signOut({ callbackUrl: "/" })}>
           <LogOut className="mr-2 h-4 w-4" />
