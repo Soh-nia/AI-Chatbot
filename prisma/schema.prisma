@@ -6,12 +6,15 @@
 
 generator client {
   provider = "prisma-client-js"
+  // previewFeatures = ["postgresqlExtensions"]
   // output   = "../app/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+  // extensions = [vector]
 }
 
 model User {
@@ -27,6 +30,7 @@ model User {
   streak        Int           @default(0)
   lastActive    DateTime?
   messages      ChatMessage[]
+  documents     Document[]
   usage         UserUsage[]
   analytics     Analytics[]
   accounts      Account[]
@@ -119,4 +123,41 @@ model Leaderboard {
   user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([queryCount])
+}
+
+model Document {
+  id         String          @id @default(uuid())
+  userId     String
+  filename   String
+  mimeType   String
+  size       Int
+  /// processing | ready | failed
+  status     String          @default("processing")
+  error      String?
+  chunkCount Int             @default(0)
+  createdAt  DateTime        @default(now())
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chunks     DocumentChunk[]
+
+  @@index([userId, createdAt])
+}
+
+model DocumentChunk {
+  id         String   @id @default(uuid())
+  documentId String
+  userId     String
+  content    String
+  /// 1-based page number; null for formats without pagination
+  page       Int?
+  chunkIndex Int
+  createdAt  DateTime @default(now())
+
+  /// pgvector column — Prisma cannot read/write this directly.
+  /// Inserts and similarity search go through raw SQL in lib/rag/.
+  embedding Unsupported("vector(768)")?
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([userId])
 }

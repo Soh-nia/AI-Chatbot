@@ -3,7 +3,8 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
-import { Plus, Sparkles, MessagesSquare, Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Sparkles, MessagesSquare, Loader2, FileText } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -11,6 +12,7 @@ import { Lusitana } from "next/font/google";
 import { NavUser } from "./SideBarAuthStatus";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { DocumentPanel } from "./DocumentPanel";
 
 const lusitana = Lusitana({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -81,8 +83,8 @@ export function AppSidebar() {
           </div>
         )}
       </SidebarHeader>
-      <SidebarContent className="bg-slate-900/50 backdrop-blur-md flex-1 py-2 px-1 overflow-x-hidden">
-        <SidebarMenu>
+      <SidebarContent className="bg-slate-900/50 backdrop-blur-md flex-1 py-2 px-1 overflow-hidden">
+        <SidebarMenu className="shrink-0">
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
@@ -105,38 +107,58 @@ export function AppSidebar() {
         </SidebarMenu>
         {!isCollapsed && (
           <>
-            <Separator className="bg-slate-700/50" />
-            <ScrollArea className="flex-1 mt-2">
-              <div className="px-2 text-xs font-medium text-slate-300 my-2">Recents</div>
-              {isChatsLoading ? (
-                <div className="flex flex-col items-center justify-center py-4">
-                  <Loader2 className="h-6 w-6 text-sky-500 animate-spin" />
-                  <p className="mt-2 text-slate-300 text-sm">Loading chats...</p>
-                </div>
-              ) : (
-                <SidebarMenu>
-                  {chats.length === 0 ? (
-                    <div className="px-2 text-slate-400 text-sm">No chats yet</div>
+            <Separator className="bg-slate-700/50 shrink-0" />
+            <Tabs defaultValue="chats" className="flex-1 min-h-0 mt-2 gap-0">
+              <TabsList className="mx-2 shrink-0 bg-slate-800/50">
+                <TabsTrigger value="chats" className="gap-1.5 text-slate-300 data-[state=active]:text-white">
+                  <MessagesSquare size={14} />
+                  Chats
+                </TabsTrigger>
+                <TabsTrigger value="documents" className="gap-1.5 text-slate-300 data-[state=active]:text-white">
+                  <FileText size={14} />
+                  Documents
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="chats" className="min-h-0">
+                <ScrollArea className="h-full">
+                  <div className="px-2 text-xs font-medium text-slate-300 my-2">Recents</div>
+                  {isChatsLoading ? (
+                    <div className="flex flex-col items-center justify-center py-4">
+                      <Loader2 className="h-6 w-6 text-sky-500 animate-spin" />
+                      <p className="mt-2 text-slate-300 text-sm">Loading chats...</p>
+                    </div>
                   ) : (
-                    chats.map((chat) => (
-                      <SidebarMenuItem key={chat.id}>
-                        <SidebarMenuButton
-                          asChild
-                          className={`mx-1 w-full justify-start text-slate-300 hover:bg-slate-800/50 hover:text-white ${
-                            currentChatId === chat.id ? "bg-slate-800/70 text-white" : ""
-                          } overflow-hidden`}
-                        >
-                          <Link href={`/chat/${chat.id}`}>
-                            <span className="truncate">{chat.title}</span>
-                            <span className="ml-auto text-xs text-slate-500">{chat.timestamp}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))
+                    <SidebarMenu>
+                      {chats.length === 0 ? (
+                        <div className="px-2 text-slate-400 text-sm">No chats yet</div>
+                      ) : (
+                        chats.map((chat) => (
+                          <SidebarMenuItem key={chat.id}>
+                            <SidebarMenuButton
+                              asChild
+                              className={`mx-1 w-full justify-start text-slate-300 hover:bg-slate-800/50 hover:text-white ${
+                                currentChatId === chat.id ? "bg-slate-800/70 text-white" : ""
+                              } overflow-hidden`}
+                            >
+                              <Link href={`/chat/${chat.id}`}>
+                                <span className="truncate">{chat.title}</span>
+                                <span className="ml-auto text-xs text-slate-500">{chat.timestamp}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))
+                      )}
+                    </SidebarMenu>
                   )}
-                </SidebarMenu>
-              )}
-            </ScrollArea>
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="documents" className="min-h-0 px-2">
+                <ScrollArea className="h-full">
+                  <div className="text-xs font-medium text-slate-300 my-2">Your documents</div>
+                  <DocumentPanel />
+                </ScrollArea>
+              </TabsContent>
+            </Tabs>
           </>
         )}
       </SidebarContent>

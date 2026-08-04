@@ -9,7 +9,7 @@ export async function GET(req: Request, context: unknown) {
     }
 
     const params = context as { params: { sessionId: string } };
-    const { sessionId } = params.params;
+    const { sessionId } = await params.params;
 
     const messages = await prisma.chatMessage.findMany({
         where: { sessionId, userId: session.user.id },

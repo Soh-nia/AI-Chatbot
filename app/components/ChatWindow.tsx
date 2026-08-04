@@ -5,17 +5,47 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Send, Sparkles, SquareIcon, ArrowDown, Loader2 } from "lucide-react";
+import { Send, Sparkles, SquareIcon, ArrowDown, Loader2, FileText } from "lucide-react";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+
+export interface Source {
+  index: number;
+  documentId: string;
+  filename: string;
+  page: number | null;
+  similarity: number;
+  excerpt: string;
+}
 
 export interface ChatMessage {
   id?: number;
   role: "user" | "assistant";
   content: string;
   timestamp?: Date;
+  sources?: Source[];
+}
+
+/** Citations for a RAG-grounded answer. */
+function Citations({ sources }: { sources: Source[] }) {
+  if (!sources.length) return null;
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {sources.map((s) => (
+        <span
+          key={`${s.documentId}-${s.index}`}
+          title={s.excerpt}
+          className="inline-flex items-center gap-1 rounded-full border border-sky-800 bg-slate-800/60 px-2 py-0.5 text-[11px] text-sky-300"
+        >
+          <FileText className="h-3 w-3" />
+          [{s.index}] {s.filename}
+          {s.page ? `, p.${s.page}` : ""}
+        </span>
+      ))}
+    </div>
+  );
 }
 
 function TypingAnimation() {
@@ -112,6 +142,19 @@ export function Chatbot({ sessionId }: { sessionId?: string }) {
               const parsed = JSON.parse(data);
               if (parsed.sessionId) {
                 newSessionId = parsed.sessionId;
+              } else if (parsed.sources) {
+                assistantMessage.sources = parsed.sources;
+                setMessages((prev) => [
+                  ...prev.slice(0, -1),
+                  { ...assistantMessage },
+                ]);
+              } else if (parsed.error) {
+                assistantMessage.content =
+                  assistantMessage.content || parsed.error;
+                setMessages((prev) => [
+                  ...prev.slice(0, -1),
+                  { ...assistantMessage },
+                ]);
               } else if (parsed.text) {
                 assistantMessage.content += parsed.text;
                 setMessages((prev) => [
@@ -216,6 +259,9 @@ export function Chatbot({ sessionId }: { sessionId?: string }) {
                     >
                       {msg.content}
                     </ReactMarkdown>
+                    {msg.role === "assistant" && msg.sources && (
+                      <Citations sources={msg.sources} />
+                    )}
                   </div>
                 </div>
               ))
